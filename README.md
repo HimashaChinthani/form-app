@@ -107,3 +107,18 @@ Successful create and update requests return the submission object. Successful d
 ```json
 { "message": "Submission deleted" }
 ```
+
+### Postman collection
+
+The complete Postman collection is included at `postman/FormApp.postman_collection.json`.
+
+To use it:
+
+1. Open Postman and select **Import**.
+2. Choose `postman/FormApp.postman_collection.json`.
+3. Start the backend with `npm run dev` from the `backend` directory.
+4. Run **Register customer**, then **Customer login**.
+5. Copy the returned `accessToken` into the collection variable `accessToken`.
+6. For admin requests, run **Admin login** with `admin@test.com` and `admin123`, then replace `accessToken` with the admin token.
+7. Run **Create submission** or **Get submissions with filters**.
+8. Copy a submission `_id` into the collection variable `submissionId` before running update or delete.
