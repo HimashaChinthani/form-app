@@ -16,7 +16,13 @@ A full-stack web application featuring user authentication, role-based access co
 
 ### Environment variables
 
-Create `backend/.env` from `backend/.env.example` and set a private MongoDB connection string and JWT secret before starting the backend. Never commit `backend/.env` or share its credentials.
+From the project root, copy the example file and set a private JWT secret:
+
+```bash
+copy backend\.env.example backend\.env
+```
+
+For PowerShell, use `Copy-Item backend/.env.example backend/.env`. Update `JWT_SECRET` in `backend/.env` with a long random value. Keep MongoDB running locally, or replace `MONGO_URI` with your MongoDB connection string. Never commit `backend/.env` or share its credentials.
 
 ### Backend
 1. Navigate to the backend directory:
@@ -31,7 +37,7 @@ Create `backend/.env` from `backend/.env.example` and set a private MongoDB conn
    ```bash
    npm start
    ```
-   *(Note: Connects to local MongoDB at `mongodb://127.0.0.1:27017/form_app` by default).*
+   *(Note: The server connects to local MongoDB at `mongodb://127.0.0.1:27017/form_app` by default and must be able to reach MongoDB before it starts listening.)*
    An initial admin account is automatically seeded upon start:
    - Email: `admin@test.com`
    - Password: `admin123`
@@ -49,6 +55,7 @@ Create `backend/.env` from `backend/.env.example` and set a private MongoDB conn
    ```bash
    npm run dev
    ```
+   Open the URL printed by Vite, usually `http://localhost:5173`. The frontend is configured to call the backend at `http://localhost:5000/api`.
 
 ## API Endpoints
 Base URL: `http://localhost:5000/api`
@@ -116,7 +123,7 @@ To use it:
 
 1. Open Postman and select **Import**.
 2. Choose `postman/FormApp.postman_collection.json`.
-3. Start the backend with `npm run dev` from the `backend` directory.
+3. Start the backend with `npm run dev` from the `backend` directory, or use `npm start` for a non-watch process.
 4. Run **Register customer**, then **Customer login**.
 5. Copy the returned `accessToken` into the collection variable `accessToken`.
 6. For admin requests, run **Admin login** with `admin@test.com` and `admin123`, then replace `accessToken` with the admin token.
