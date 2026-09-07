@@ -27,7 +27,7 @@ const seedAdmin = async () => {
     const adminExists = await User.findOne({ role: 'ADMIN' });
     if (!adminExists) {
       const hashedPassword = await bcrypt.hash('admin123', 10);
-      await User.create({ email: 'admin@test.com', password: hashedPassword, role: 'ADMIN' });
+      await User.create({ email: 'admin@test.com', password: hashedPassword, role: 'ADMIN', isSuperAdmin: true });
       console.log('Seeded initial admin: admin@test.com / admin123');
     }
   } catch (err) {

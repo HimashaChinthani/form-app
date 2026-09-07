@@ -200,13 +200,14 @@ const AdminDashboard = () => {
                   <th className="p-6 text-purple-500 text-xs font-black uppercase tracking-widest">Gender</th>
                   <th className="p-6 text-purple-500 text-xs font-black uppercase tracking-widest">Mobile</th>
                   <th className="p-6 text-purple-500 text-xs font-black uppercase tracking-widest">Address</th>
+                  <th className="p-6 text-purple-500 text-xs font-black uppercase tracking-widest">Feedback</th>
                   <th className="p-6 text-purple-500 text-xs font-black uppercase tracking-widest text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-purple-50">
                 {submissions.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="p-16 text-center">
+                    <td colSpan="7" className="p-16 text-center">
                       <div className="flex flex-col items-center justify-center text-purple-300">
                         <Users className="w-16 h-16 mb-4 opacity-50 text-purple-400" />
                         <p className="text-xl font-bold">No submissions found.</p>
@@ -232,6 +233,7 @@ const AdminDashboard = () => {
                           </td>
                           <td className="p-4"><input name="mobileNumber" value={editForm.mobileNumber} onChange={handleEditChange} className="w-full bg-white border border-purple-200 rounded-lg px-4 py-2 font-medium text-slate-700 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-100" /></td>
                           <td className="p-4"><input name="address" value={editForm.address} onChange={handleEditChange} className="w-full bg-white border border-purple-200 rounded-lg px-4 py-2 font-medium text-slate-700 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-100 min-w-[200px]" /></td>
+                          <td className="p-4"><textarea name="feedback" value={editForm.feedback || ''} onChange={handleEditChange} rows="2" className="w-full bg-white border border-purple-200 rounded-lg px-4 py-2 font-medium text-slate-700 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-100 min-w-[220px]" /></td>
                           <td className="p-4">
                             <div className="flex gap-2 justify-end">
                               <button onClick={() => saveEdit(sub._id)} className="p-2.5 bg-purple-100 text-purple-600 hover:bg-purple-200 rounded-xl transition"><Check className="w-5 h-5" /></button>
@@ -255,6 +257,7 @@ const AdminDashboard = () => {
                           </td>
                           <td className="p-6 text-slate-500 font-bold text-sm tracking-wide">{sub.mobileNumber}</td>
                           <td className="p-6 text-slate-500 font-medium truncate max-w-[250px]">{sub.address}</td>
+                          <td className="p-6 text-slate-500 font-medium truncate max-w-[250px]">{sub.feedback || '-'}</td>
                           <td className="p-6">
                             <div className="flex gap-3 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
                               <button onClick={() => startEdit(sub)} className="p-2.5 bg-purple-50 hover:bg-purple-100 text-purple-600 rounded-xl transition shadow-sm border border-purple-100" title="Edit">

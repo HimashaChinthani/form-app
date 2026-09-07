@@ -2,6 +2,19 @@ const express = require('express');
 const Submission = require('../models/Submission');
 const auth = require('../middleware/auth');
 const router = express.Router();
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const mobileRegex = /^[0-9]{10}$/;
+
+const validateSubmission = (data) => {
+  const requiredFields = ['firstName', 'lastName', 'email', 'gender', 'mobileNumber', 'address'];
+  if (requiredFields.some((field) => typeof data[field] !== 'string' || !data[field].trim())) {
+    return 'All required fields must be provided';
+  }
+  if (!emailRegex.test(data.email.trim())) return 'Invalid email format';
+  if (!mobileRegex.test(data.mobileNumber.trim())) return 'Invalid local mobile number format';
+  if (!['MALE', 'FEMALE', 'OTHER'].includes(data.gender)) return 'Invalid gender';
+  return null;
+};
 
 // Form Submission (Customer Protected Route)
 router.post('/', auth(['CUSTOMER']), async (req, res) => {
@@ -9,17 +22,8 @@ router.post('/', auth(['CUSTOMER']), async (req, res) => {
     const { firstName, lastName, email, gender, mobileNumber, address, feedback } = req.body;
     
     // Server side validations
-    if (!firstName || !lastName || !email || !gender || !mobileNumber || !address) {
-      return res.status(400).json({ message: 'Missing required fields' });
-    }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ message: 'Invalid email format' });
-    }
-    const mobileRegex = /^[0-9]{10}$/; // Simple local mobile format example
-    if (!mobileRegex.test(mobileNumber)) {
-      return res.status(400).json({ message: 'Invalid local mobile number format' });
-    }
+    const validationError = validateSubmission({ firstName, lastName, email, gender, mobileNumber, address });
+    if (validationError) return res.status(400).json({ message: validationError });
 
     const newSubmission = new Submission({
       firstName, lastName, email, gender, mobileNumber, address, feedback,
@@ -63,10 +67,18 @@ router.get('/', auth(['ADMIN']), async (req, res) => {
 router.put('/:id', auth(['ADMIN']), async (req, res) => {
   try {
     const { id } = req.params;
-    const updateData = { ...req.body, userModified: req.user.id };
+    const editableFields = ['firstName', 'lastName', 'email', 'gender', 'mobileNumber', 'address', 'feedback'];
+    const updateData = Object.fromEntries(
+      editableFields.filter((field) => Object.prototype.hasOwnProperty.call(req.body, field))
+        .map((field) => [field, req.body[field]])
+    );
+    const existing = await Submission.findById(id);
+    if (!existing) return res.status(404).json({ message: 'Submission not found' });
+    const validationError = validateSubmission({ ...existing.toObject(), ...updateData });
+    if (validationError) return res.status(400).json({ message: validationError });
+    updateData.userModified = req.user.id;
     
-    const updated = await Submission.findByIdAndUpdate(id, updateData, { new: true });
-    if (!updated) return res.status(404).json({ message: 'Submission not found' });
+    const updated = await Submission.findByIdAndUpdate(id, { $set: updateData }, { new: true, runValidators: true });
     
     res.json(updated);
   } catch (error) {

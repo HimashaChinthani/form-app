@@ -14,6 +14,10 @@ A full-stack web application featuring user authentication, role-based access co
 
 ## Setup Instructions
 
+### Environment variables
+
+Create `backend/.env` from `backend/.env.example` and set a private MongoDB connection string and JWT secret before starting the backend. Never commit `backend/.env` or share its credentials.
+
 ### Backend
 1. Navigate to the backend directory:
    ```bash
@@ -47,11 +51,59 @@ A full-stack web application featuring user authentication, role-based access co
    ```
 
 ## API Endpoints
-- `POST /api/auth/register` - Customer Registration
-- `POST /api/auth/login/customer` - Customer Login
-- `POST /api/auth/login/admin` - Admin Login
-- `POST /api/auth/create-admin` - Create new Admin (Protected)
-- `POST /api/submissions` - Submit application form (Customer Protected)
-- `GET /api/submissions` - Get all submissions, supports `?search=` and `?gender=` (Admin Protected)
-- `PUT /api/submissions/:id` - Update submission (Admin Protected)
-- `DELETE /api/submissions/:id` - Delete submission (Admin Protected)
+Base URL: `http://localhost:5000/api`
+
+For protected endpoints, send the access token in this header:
+
+```text
+Authorization: Bearer <accessToken>
+```
+
+### Authentication
+
+| Method | Endpoint | Access | Request body |
+|---|---|---|---|
+| POST | `/auth/register` | Public | `{ "email": "customer@example.com", "password": "pass1234", "confirmPassword": "pass1234" }` |
+| POST | `/auth/login/customer` | Public | `{ "email": "customer@example.com", "password": "pass1234" }` |
+| POST | `/auth/login/admin` | Public | `{ "email": "admin@test.com", "password": "admin123" }` |
+| POST | `/auth/refresh` | Public | `{ "refreshToken": "<refreshToken>" }` |
+| POST | `/auth/create-admin` | Seeded/super admin | `{ "email": "new-admin@example.com" }` |
+
+Successful customer and admin login responses contain `accessToken` and `refreshToken`. Admin creation returns the generated temporary password in the response.
+
+### Submissions
+
+| Method | Endpoint | Access | Description |
+|---|---|---|---|
+| POST | `/submissions` | Customer | Create a submission |
+| GET | `/submissions` | Admin | List submissions; optional query parameters: `search` and `gender` |
+| PUT | `/submissions/:id` | Admin | Update a submission by MongoDB ID |
+| DELETE | `/submissions/:id` | Admin | Delete a submission by MongoDB ID |
+
+Create or update a submission with this JSON body:
+
+```json
+{
+   "firstName": "John",
+   "lastName": "Doe",
+   "email": "john@example.com",
+   "gender": "MALE",
+   "mobileNumber": "1234567890",
+   "address": "123 Main Street",
+   "feedback": "Optional feedback"
+}
+```
+
+Valid gender values are `MALE`, `FEMALE`, and `OTHER`. The submission email must be unique, and the mobile number must contain 10 digits.
+
+Example filtered request:
+
+```text
+GET /api/submissions?search=john&gender=MALE
+```
+
+Successful create and update requests return the submission object. Successful delete requests return:
+
+```json
+{ "message": "Submission deleted" }
+```
