@@ -11,7 +11,6 @@ const AdminDashboard = () => {
   const [editForm, setEditForm] = useState({});
   const navigate = useNavigate();
 
-  // Admin Creation State
   const [showAdminForm, setShowAdminForm] = useState(false);
   const [adminEmail, setAdminEmail] = useState('');
   const [adminCreationStatus, setAdminCreationStatus] = useState(null);
@@ -96,7 +95,6 @@ const AdminDashboard = () => {
       
       <div className="max-w-7xl mx-auto space-y-8 relative z-10">
         
-        {/* Header */}
         <div className="clean-card p-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-5">
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-fuchsia-600 flex items-center justify-center shadow-lg shadow-purple-200">
@@ -119,7 +117,6 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Create Admin Panel */}
         {showAdminForm && (
           <div className="clean-card p-6 bg-white border-t-4 border-t-purple-500 animate-fade-in-up">
             <h2 className="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
@@ -162,7 +159,6 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        {/* Toolbar */}
         <div className="clean-card p-4 flex flex-col md:flex-row gap-4 justify-between items-center">
           <div className="relative w-full md:w-96">
             <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-purple-400 w-5 h-5" />
@@ -189,7 +185,6 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Table Container */}
         <div className="clean-card overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse whitespace-nowrap">

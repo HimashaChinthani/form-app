@@ -16,12 +16,10 @@ const validateSubmission = (data) => {
   return null;
 };
 
-// Form Submission (Customer Protected Route)
 router.post('/', auth(['CUSTOMER']), async (req, res) => {
   try {
     const { firstName, lastName, email, gender, mobileNumber, address, feedback } = req.body;
     
-    // Server side validations
     const validationError = validateSubmission({ firstName, lastName, email, gender, mobileNumber, address });
     if (validationError) return res.status(400).json({ message: validationError });
 
@@ -39,7 +37,6 @@ router.post('/', auth(['CUSTOMER']), async (req, res) => {
   }
 });
 
-// Admin Dashboard Routes (Admin Protected Routes)
 router.get('/', auth(['ADMIN']), async (req, res) => {
   try {
     const { gender, search } = req.query;
@@ -63,7 +60,6 @@ router.get('/', auth(['ADMIN']), async (req, res) => {
   }
 });
 
-// Update a Submission
 router.put('/:id', auth(['ADMIN']), async (req, res) => {
   try {
     const { id } = req.params;
@@ -86,7 +82,6 @@ router.put('/:id', auth(['ADMIN']), async (req, res) => {
   }
 });
 
-// Delete a Submission
 router.delete('/:id', auth(['ADMIN']), async (req, res) => {
   try {
     const { id } = req.params;

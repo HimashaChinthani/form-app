@@ -9,7 +9,6 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Routes
 const authRoutes = require('./routes/auth');
 const submissionRoutes = require('./routes/submissions');
 
@@ -19,7 +18,6 @@ app.use('/api/submissions', submissionRoutes);
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/form_app';
 
-// Seed initial admin
 const seedAdmin = async () => {
   const User = require('./models/User');
   const bcrypt = require('bcrypt');

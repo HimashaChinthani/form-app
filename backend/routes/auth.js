@@ -19,7 +19,6 @@ const generateTokens = (user) => {
   return { accessToken, refreshToken };
 };
 
-// Customer Registration
 router.post('/register', async (req, res) => {
   try {
     const email = req.body.email?.trim().toLowerCase();
@@ -51,7 +50,6 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// Customer Login
 router.post('/login/customer', async (req, res) => {
   try {
     const email = req.body.email?.trim().toLowerCase();
@@ -69,7 +67,6 @@ router.post('/login/customer', async (req, res) => {
   }
 });
 
-// Admin Login
 router.post('/login/admin', async (req, res) => {
   try {
     const email = req.body.email?.trim().toLowerCase();
@@ -87,7 +84,6 @@ router.post('/login/admin', async (req, res) => {
   }
 });
 
-// Admin Creation (Protected)
 router.post('/create-admin', auth(['ADMIN']), async (req, res) => {
   try {
     const email = req.body.email?.trim().toLowerCase();
@@ -115,7 +111,6 @@ router.post('/create-admin', auth(['ADMIN']), async (req, res) => {
   }
 });
 
-// Refresh Token
 router.post('/refresh', async (req, res) => {
   const { refreshToken } = req.body;
   if (!refreshToken) return res.status(401).json({ message: 'Refresh token required' });
